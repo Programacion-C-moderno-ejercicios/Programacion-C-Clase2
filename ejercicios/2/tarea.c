@@ -1,15 +1,6 @@
 #include "tarea.h"
 #include <string.h>
 
-struct tarea {
-	char		*nombre_tarea;
-	char		*desc_tarea;
-	uint32_t	id;
-	char		*usuario;
-	uint32_t	prioridad;
-
-	uint32_t	flags;
-};
 
 struct tarea *tarea_alloc(void)
 {
@@ -111,7 +102,7 @@ void tarea_attr_set_str(struct tarea *t, uint16_t attr, const char *data)
 	tarea_attr_set_data(t, attr, data, 0);
 }
 
-const void *tarea_attr_get_data(struct tarea *t, uint16_t attr)
+const void *tarea_attr_get_data(const struct tarea *t, uint16_t attr)
 {
 	if(!(t->flags & (1 << attr)))
 		return NULL;
@@ -133,13 +124,13 @@ const void *tarea_attr_get_data(struct tarea *t, uint16_t attr)
 }
 
 
-uint32_t tarea_attr_get_u32(struct tarea *t, uint16_t attr)
+uint32_t tarea_attr_get_u32(const struct tarea *t, uint16_t attr)
 {
 	const void * ret = tarea_attr_get_data(t, attr);
 	return ret == NULL ? 0 : *((uint32_t *)ret);
 }
 
-const char *tarea_attr_get_str(struct tarea *t, uint16_t attr)
+const char *tarea_attr_get_str(const struct tarea *t, uint16_t attr)
 {
 	return tarea_attr_get_data(t, attr);
 }
