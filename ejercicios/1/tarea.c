@@ -13,7 +13,7 @@ struct tarea {
 
 struct tarea *tarea_alloc(void)
 {
-	return (struct tarea *)malloc(sizeof(struct tarea));
+	return (struct tarea *)calloc(1, sizeof(struct tarea));
 }
 
 void tarea_free(struct tarea *t)
