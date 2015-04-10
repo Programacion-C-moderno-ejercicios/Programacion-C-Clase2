@@ -7,6 +7,20 @@ struct gestor_tarea{
 	uint16_t flags;
 };
 
+static int search_pos(struct gestor_tarea *g, int prio)
+{
+	int i;
+	int res = g->num_tareas;
+	for (i = 0; i < g->num_tareas; i++) {
+		struct tarea *t = &(g->tareas[i]);
+		if (tarea_attr_get_u32(t, TAREA_ATTR_PRIORIDAD) <= prio) {
+			res = i;
+			break;
+		}
+	}
+	return res;
+}
+
 struct gestor_tarea *gestor_tarea_alloc(void)
 {
 	struct gestor_tarea *g =
@@ -31,8 +45,9 @@ void gestor_tarea_attr_unset_tarea(struct gestor_tarea *g, uint16_t n)
 {
 	if (!(g->flags & (1 << GESTOR_TAREA_ATTR_NUM_TAREAS)) || g->num_tareas <= n)
 		return;
-
-	tarea_free(&(g->tareas[n]));
+	int i = n;
+	for(i = n; i < g->num_tareas; i++)
+		g->tareas[n] = g->tareas[n+1];
 	g->num_tareas--;
 	if (g->num_tareas == 0)
 		g->flags = 0;
@@ -47,11 +62,14 @@ void gestor_tarea_attr_set_tarea(struct gestor_tarea *g, const struct tarea *t)
 		g->flags = 3; //set num_tareas y tareas
 		g->num_tareas = 0;
 	}
-	
-	if (g->num_tareas >= 10)
-		return;
 
-	g->tareas[g->num_tareas] = *t;
+	int pos = search_pos(g, tarea_attr_get_u32(t, TAREA_ATTR_PRIORIDAD));
+	int i = g->num_tareas;
+	if (g->num_tareas >= 10)
+		gestor_tarea_attr_unset_tarea(g, 9);
+	for(i = g->num_tareas; i > pos; i--)
+		g->tareas[i] = g->tareas[i-1];
+	g->tareas[pos] = *t;
 	g->num_tareas++;
 }
 
