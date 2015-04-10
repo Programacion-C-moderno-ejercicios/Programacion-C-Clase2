@@ -32,5 +32,8 @@ int main(void)
 	curso_concesionario_snprintf(info, sizeof(info), con);
 	printf("%s", info);
 
+	curso_concesionario_free(con);
+	curso_coche_free(c1);
+	curso_coche_free(c2);
 	return 0;
 }

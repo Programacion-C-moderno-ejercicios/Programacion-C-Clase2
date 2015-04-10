@@ -11,7 +11,7 @@ struct concesionario {
 
 struct concesionario *curso_concesionario_alloc(void)
 {
-	return (struct concesionario *)malloc(sizeof(struct concesionario));
+	return (struct concesionario *)calloc(1, sizeof(struct concesionario));
 }
 
 void curso_concesionario_free(struct concesionario *con)
@@ -21,8 +21,6 @@ void curso_concesionario_free(struct concesionario *con)
 	if (con->flags & (1 << CURSO_CONCESIONARIO_ATTR_DUENO))
 		xfree(con->dueno);
 
-	for (i = 0; i < con->num_coches; i++)
-		curso_coche_free(con->garaje[i]);
 
 	xfree(con);
 }
@@ -34,7 +32,6 @@ void curso_concesionario_attr_unset_coche(struct concesionario *con,
 		return;
 
 	con->num_coches--;
-	curso_coche_free(con->garaje[pos]);
 }
 
 static void curso_concesionario_set_data(struct concesionario *con,
@@ -45,7 +42,7 @@ static void curso_concesionario_set_data(struct concesionario *con,
 
 	switch (attr) {
 	case CURSO_CONCESIONARIO_ATTR_DUENO:
-		if (con->dueno)
+		if (con->dueno != NULL)
 			xfree(con->dueno);
 
 		con->dueno = strdup(data);

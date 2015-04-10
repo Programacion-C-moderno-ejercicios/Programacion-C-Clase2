@@ -11,7 +11,7 @@ struct coche {
 
 struct coche *curso_coche_alloc(void)
 {
-	return (struct coche *)malloc(sizeof(struct coche));
+	return (struct coche *)calloc(1, sizeof(struct coche));
 }
 
 void curso_coche_free(struct coche *c)
