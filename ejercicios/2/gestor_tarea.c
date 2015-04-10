@@ -3,7 +3,7 @@
 struct gestor_tarea{
 	struct tarea *tareas;
 	uint16_t num_tareas;
-	
+
 	uint16_t flags;
 };
 
@@ -46,8 +46,8 @@ void gestor_tarea_attr_unset_tarea(struct gestor_tarea *g, uint16_t n)
 	if (!(g->flags & (1 << GESTOR_TAREA_ATTR_NUM_TAREAS)) || g->num_tareas <= n)
 		return;
 	int i = n;
-	for(i = n; i < g->num_tareas; i++)
-		g->tareas[n] = g->tareas[n+1];
+	for(i = g->num_tareas; i >= n; i--)
+		g->tareas[i] = g->tareas[i-1];
 	g->num_tareas--;
 	if (g->num_tareas == 0)
 		g->flags = 0;
