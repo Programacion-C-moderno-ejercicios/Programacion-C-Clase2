@@ -4,7 +4,7 @@
 
 struct tarea *tarea_alloc(void)
 {
-	return (struct tarea *)malloc(sizeof(struct tarea));
+	return (struct tarea *)calloc(1, sizeof(struct tarea));
 }
 
 void tarea_free(struct tarea *t)
@@ -71,7 +71,7 @@ void tarea_attr_set_data(struct tarea *t, uint16_t attr, const void *data,
 		t->nombre_tarea = strdup(data);
 		break;
 	case TAREA_ATTR_DESCRIPCION:
-		if (t->desc_tarea)
+		if (t->desc_tarea != NULL)
 			xfree(t->desc_tarea);
 
 		t->desc_tarea = strdup(data);
@@ -80,7 +80,7 @@ void tarea_attr_set_data(struct tarea *t, uint16_t attr, const void *data,
 		t->id = *((uint32_t *) data);
 		break;
 	case TAREA_ATTR_USUARIO:
-		if (t->usuario)
+		if (t->usuario != NULL)
 			xfree(t->usuario);
 		t->usuario = strdup(data);
 		break;
